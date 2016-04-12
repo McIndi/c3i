@@ -41,7 +41,7 @@ Installation is simple:
 
 For bleeding-edge features:
 
-```
+```bash
 $ git clone https://github.com/ilovetux/c3i
 $ cd c3i
 $ python setup.py install
@@ -49,7 +49,7 @@ $ python setup.py install
 
 For the latest stable version
 
-```
+```bash
 $ pip install c3i
 ```
 
@@ -64,7 +64,7 @@ the service.
 To disable a plugin simply add the plugins name to a key called
 `exclude_plugins` in `config.json` for instance:
 
-```
+```bash
 $ cat ~/.c3i/config.json
 {
 ...
@@ -79,7 +79,7 @@ A plugin is a Python module which registers a callable which accepts the
 configuration and returns a WSGI application. A simple plugin might look like
 this:
 
-```
+```bash
 foo
 ├── foo
 │   └── __init__.py
@@ -91,9 +91,9 @@ foo
 └── tox.ini
 ```
 
-and in setup.py:
+and in `setup.py`:
 
-```
+```python
 from setuptools import setup
 
 setup(
@@ -112,9 +112,9 @@ setup(
 )
 ```
 
-and in foo/__init__.py
+and in `foo/__init__.py`
 
-```
+```python
 import bottle
 
 def plugin(config):
@@ -151,7 +151,7 @@ the servers, you should have an agent plugin and a master plugin. They should
 be able to run from different machines or from the same machine.
 
 Have some more tips and tricks, please open an
-[issue](https://github.com/ilovetux/c3i) 
+[issue](https://github.com/mcindi/c3i/issues) 
 
 # List of official plugins
 
@@ -162,6 +162,4 @@ will soon. Stay tuned.
 
 C3I is pretty young and we haven't come across any plugins from anyone
 else yet, if you made one or know of one you would like to be included here
-please submit and [issue](https://github.com/ilovetux/c3i).
-
-
+please submit an [issue](https://github.com/mcindi/c3i/issues).
