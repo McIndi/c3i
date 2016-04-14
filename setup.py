@@ -9,7 +9,7 @@ requires += ["cherrypy", "bottle"]
 
 setup(
     name="c3i",
-    version="1.0.0"
+    version="0.6.0"
     author="iLoveTux",
     author_email="me@ilovetux.com",
     install_requires=requires,
