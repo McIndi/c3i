@@ -42,3 +42,38 @@ def generate_key_pair(cert_file, key_file):
     open(key_file, "wt").write(
         crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
 
+def first_run():
+    print("Seems like this is your first time running c3i,")
+    print("Please take some time to answer some questions.\n\n")
+    
+    print("Creating c3i home directory here: {}".format(c3i_home))
+    os.mkdir(c3i_home)
+    os.mkdir(os.path.join(c3i_home, "pki"))
+    os.mkdir(os.path.join(c3i_home, "pki", "public"))
+    os.mkdir(os.path.join(c3i_home, "pki", "private"))
+    os.mkdir(os.path.join(c3i_home, "log"))
+
+    cert_file = os.path.join(c3i_home, "pki", "public", "c3i.crt")
+    key_file = os.path.join(c3i_home, "pki", "private", "c3i.key")
+    access_log = os.path.join(c3i_home, "log", "access.log")
+    error_log = os.path.join(c3i_home, "log", "error.log")
+
+    print("Generating an RSA key pair to use for encryption,")
+    print("please answer these questions:\n\n")
+    
+    # This function will ask the questions
+    util.generate_key_pair(cert_file, key_file)
+    with open(c3i_config, "w") as fout:
+        json.dump({
+            "cert": cert_file,
+            "key": key_file,
+            "port": 8080,
+            "host": "127.0.0.1",
+            "max_request_body_size": 536870912,
+            "access.log": access_log,
+            "error.log": error_log
+        },
+        fout)
+
+    print("A default configuration has been placed in {}".format(
+        os.path.join(c3i_config)))    
