@@ -22,10 +22,6 @@ setup(
             'c3i-make-plugin=c3i.c3i_make_plugin:main',
             'c3id=c3i.__main__:main'   
         ],
-        'c3i_plugin': [
-            'config=c3i.plugins.config:plugin',
-            'github=c3i.plugins.github:plugin',
-        ]
     }
 )
 

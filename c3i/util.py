@@ -1,4 +1,7 @@
+import os
 import sys
+import json
+import platform
 from OpenSSL import crypto, SSL
 from socket import gethostname
 from pprint import pprint
@@ -42,28 +45,58 @@ def generate_key_pair(cert_file, key_file):
     open(key_file, "wt").write(
         crypto.dump_privatekey(crypto.FILETYPE_PEM, k))
 
+        
+def is_writable(d):
+    """Return True if d is a directory and is writable by
+    current user"""
+    fname = os.path.join(d, "test.write")
+    try:
+        with open(fname, "w") as fout:
+            fout.write("test")
+        os.remove(fname)
+        return True
+    except IOError:
+        return False
+
+def c3i_home():
+    if "Windows" in platform.system():
+        home = os.path.join("\Program Files", "c3i")
+        if is_writable(home):
+            return home
+    elif "Linux" in platform.system():
+        home = os.path.join("/opt", "c3i")
+        if is_writable(home):
+            return home
+    else:
+        return ""
+    home = os.path.join(os.path.expanduser("~"), "c3i")
+    return home
+
+def c3i_config():
+    return os.path.join(c3i_home(), "config.json")
+        
 def first_run():
     print("Seems like this is your first time running c3i,")
     print("Please take some time to answer some questions.\n\n")
     
-    print("Creating c3i home directory here: {}".format(c3i_home))
-    os.mkdir(c3i_home)
-    os.mkdir(os.path.join(c3i_home, "pki"))
-    os.mkdir(os.path.join(c3i_home, "pki", "public"))
-    os.mkdir(os.path.join(c3i_home, "pki", "private"))
-    os.mkdir(os.path.join(c3i_home, "log"))
+    print("Creating c3i home directory here: {}".format(c3i_home()))
+    os.mkdir(c3i_home())
+    os.mkdir(os.path.join(c3i_home(), "pki"))
+    os.mkdir(os.path.join(c3i_home(), "pki", "public"))
+    os.mkdir(os.path.join(c3i_home(), "pki", "private"))
+    os.mkdir(os.path.join(c3i_home(), "log"))
 
-    cert_file = os.path.join(c3i_home, "pki", "public", "c3i.crt")
-    key_file = os.path.join(c3i_home, "pki", "private", "c3i.key")
-    access_log = os.path.join(c3i_home, "log", "access.log")
-    error_log = os.path.join(c3i_home, "log", "error.log")
+    cert_file = os.path.join(c3i_home(), "pki", "public", "c3i.crt")
+    key_file = os.path.join(c3i_home(), "pki", "private", "c3i.key")
+    access_log = os.path.join(c3i_home(), "log", "access.log")
+    error_log = os.path.join(c3i_home(), "log", "error.log")
 
     print("Generating an RSA key pair to use for encryption,")
     print("please answer these questions:\n\n")
     
     # This function will ask the questions
-    util.generate_key_pair(cert_file, key_file)
-    with open(c3i_config, "w") as fout:
+    generate_key_pair(cert_file, key_file)
+    with open(c3i_config(), "w") as fout:
         json.dump({
             "cert": cert_file,
             "key": key_file,
@@ -76,4 +109,4 @@ def first_run():
         fout)
 
     print("A default configuration has been placed in {}".format(
-        os.path.join(c3i_config)))    
+        os.path.join(c3i_config())))    

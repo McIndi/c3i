@@ -11,19 +11,11 @@ from time import time
 from cherrypy.wsgiserver.ssl_builtin import BuiltinSSLAdapter
 from cherrypy.wsgiserver import CherryPyWSGIServer
 
-if "Windows" in platform.system():
-	home = "C:\\Program Files"
-	c3i_home = os.path.join(home, "c3i")
-	c3i_config = os.path.join(c3i_home, "config.json")
-elif "Linux" in platform.system():
-	home = os.path.expanduser("~")
-	c3i_home = os.path.join(home, ".c3i")
-	c3i_config = os.path.join(c3i_home, "config.json")
 
-if not os.path.exists(c3i_home):
+if not os.path.exists(util.c3i_home()):
     util.first_run()
 
-with open(c3i_config, "r") as fin:
+with open(util.c3i_config(), "r") as fin:
     config = json.load(fin)
 
 
@@ -61,4 +53,3 @@ def main(argv=None):
     
 if __name__ == "__main__":
     main()
-
